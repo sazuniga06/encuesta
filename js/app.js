@@ -102,10 +102,12 @@ $$('[data-close]').forEach(b => b.onclick = cerrar);
 addEventListener('keydown', e => e.key === 'Escape' && cerrar());
 
 function agenda() {
-  const d = CONFIG.fecha, n = new Date(+d.slice(0, 4), +d.slice(4, 6) - 1, +d.slice(6) + 1), e = n.getFullYear() + String(n.getMonth() + 1).padStart(2, '0') + String(n.getDate()).padStart(2, '0');
-  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'BEGIN:VEVENT', `UID:cosecha-${d}@invitacion`, `DTSTAMP:${d}T000000Z`, `DTSTART;VALUE=DATE:${d}`, `DTEND;VALUE=DATE:${e}`,
-    'SUMMARY:Amanecer en la cosecha 🎬', `LOCATION:${CONFIG.cine}`, 'DESCRIPTION:Cine con Hello Kitty y la pandilla', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
-  $('#ics').href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+  // Google Calendar (evento de todo el día; el fin es exclusivo, por eso +1 día)
+  const d = CONFIG.fecha, n = new Date(+d.slice(0, 4), +d.slice(4, 6) - 1, +d.slice(6) + 1);
+  const fin = n.getFullYear() + String(n.getMonth() + 1).padStart(2, '0') + String(n.getDate()).padStart(2, '0');
+  const q = new URLSearchParams({ action: 'TEMPLATE', text: 'Amanecer en la cosecha 🎬', dates: `${d}/${fin}`,
+    details: 'Cine con Hello Kitty y la pandilla. ¡Que la suerte esté siempre de tu lado!', location: CONFIG.cine });
+  $('#ics').href = 'https://calendar.google.com/calendar/render?' + q;
 }
 
 $('#parade').innerHTML = crew.map(([f], i) => `<img src="assets/${f}.webp" alt="" style="--i:${i}" width="420" height="596">`).join('');
