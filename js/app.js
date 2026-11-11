@@ -87,7 +87,7 @@ async function enviar(si) {
     message: `${quien} respondió ${si ? 'SÍ' : 'NO'} a Amanecer en la cosecha (22 nov). ${new Date().toLocaleString('es-CO')}` };
   try { return (await fetch('https://ntfy.sh/', { method: 'POST', body: JSON.stringify(body) })).ok; } catch { return false; }
 }
-const OK = '<span class="chip"><span class="ms">check_circle</span>Respuesta enviada a mi celular</span>';
+const OK = '';
 const SENDING = '<span class="chip"><span class="ms">sync</span>Enviando respuesta…</span>';
 
 /* ---------- Diálogos de respuesta ---------- */
@@ -128,8 +128,7 @@ async function responder(si) {
   const intentar = async () => {
     st.innerHTML = SENDING;
     if (await enviar(si)) { st.innerHTML = OK; return; }
-    const wa = CONFIG.phone ? `<a class="btn outlined" target="_blank" rel="noopener" href="https://wa.me/${CONFIG.phone}?text=${encodeURIComponent(`${nombre || 'Hola'}: ${si ? '¡SÍ voy a ver Amanecer en la cosecha! 🎬' : 'Hoy no puedo 💔'}`)}">WhatsApp</a>` : '';
-    st.innerHTML = `<span class="chip"><span class="ms">wifi_off</span>No pude enviarla</span><button class="btn tonal" id="retry">Reintentar</button>${wa}`;
+    st.innerHTML = `<span class="chip"><span class="ms">wifi_off</span>No pude enviarla</span><button class="btn tonal" id="retry">Reintentar</button>`;
     $('#retry').onclick = intentar;
   };
   intentar();
