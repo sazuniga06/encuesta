@@ -190,10 +190,11 @@ function abrirInvitacion() {
   setTimeout(() => { intro.remove(); document.body.classList.remove('intro-on'); scrollTo(0, 0); }, 3600 * k);
 }
 /* 1) pantalla negra → 2) toque en «Iniciar encuesta» (desbloquea el audio) → 3) el sobre aparece y se abre solo */
-gateBtn.onclick = () => {
+if (gateBtn) gateBtn.onclick = () => {
   ctx(); buzz(20); gateBtn.disabled = true;
   gate.classList.add('out'); intro.classList.add('go'); setTimeout(() => gate.remove(), 1200);
   auto = setTimeout(abrirInvitacion, reduceMotion ? 500 : 2800);
 };
 $('#seal').onclick = () => { clearTimeout(auto); abrirInvitacion(); };   // tocar el sello adelanta la apertura
-gateBtn.focus({ preventScroll: true });
+if (gateBtn) gateBtn.focus({ preventScroll: true });
+else { intro.classList.add('go'); auto = setTimeout(abrirInvitacion, 1500); }   // HTML antiguo en caché: no se queda trabado
