@@ -10,13 +10,16 @@ json() { node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{co
 echo "━━ 1/4  Crea tu bot en Telegram"
 echo "   Abre @BotFather → /newbot → elige un nombre y un usuario que termine en 'bot'. Copia el token que te da."
 read -rsp "   Pega el token (no se muestra): " TOKEN; echo
-BOT=$(api getMe | json "j.ok?j.result.username:''")
-[ -n "$BOT" ] || { echo "   Token inválido, vuelve a intentarlo."; exit 1; }
+TOKEN=${TOKEN//[[:space:]]/}   # quita espacios o saltos de línea que se cuelan al pegar
+[ -n "$TOKEN" ] || { echo "   No recibí ningún token. Pégalo con clic derecho o Ctrl+Shift+V y pulsa Enter."; exit 1; }
+BOT=$(api getMe 2>/dev/null | json "j.ok?j.result.username:''" || true)
+[ -n "$BOT" ] || { echo "   Token inválido o sin internet (debe verse como 123456789:AAE…, sin espacios). Revócalo/cópialo de nuevo en @BotFather."; exit 1; }
+echo "   ✓ Bot encontrado: @$BOT"
 
 echo "━━ 2/4  Conecta tu chat"
 echo "   Abre https://t.me/$BOT , toca INICIAR y escríbele cualquier mensaje. Luego vuelve aquí y pulsa Enter."
 read -r
-CHAT=$(api getUpdates | json "j.result.filter(u=>u.message).pop().message.chat.id")
+CHAT=$(api getUpdates 2>/dev/null | json "j.result.filter(u=>u.message).pop().message.chat.id" || true)
 [ -n "$CHAT" ] || { echo "   No vi ningún mensaje. Escríbele al bot y ejecuta el script otra vez."; exit 1; }
 
 echo "━━ 3/4  Cloudflare (cuenta gratis): se abrirá el navegador para iniciar sesión"
