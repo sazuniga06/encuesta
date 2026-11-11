@@ -178,16 +178,22 @@ bYes.onclick = () => responder(true);
 bNo.onclick = () => responder(false);
 
 /* ---------- Portada: el sobre con la cara de Kitty ---------- */
-const intro = $('#intro'), abrirBtn = $('#openBtn');
+const intro = $('#intro'), gate = $('#gate'), gateBtn = $('#gateBtn');
+let auto;
 $('#intro-name').textContent = nombre || 'ti';
 function abrirInvitacion() {
   if (intro.classList.contains('open')) return;
-  ctx();                                   // el toque del usuario desbloquea el audio (iPhone/Chrome)
   intro.classList.add('open'); buzz(30); sinsajo(.15);
   const k = reduceMotion ? .1 : 1;
   setTimeout(() => { musica(); tone(784, 0, .5); tone(1047, .12, .6); confetti(); }, 900 * k);
   setTimeout(() => intro.classList.add('leave'), 2700 * k);
   setTimeout(() => { intro.remove(); document.body.classList.remove('intro-on'); scrollTo(0, 0); }, 3600 * k);
 }
-abrirBtn.onclick = $('#seal').onclick = abrirInvitacion;
-abrirBtn.focus({ preventScroll: true });
+/* 1) pantalla negra → 2) toque en «Iniciar encuesta» (desbloquea el audio) → 3) el sobre aparece y se abre solo */
+gateBtn.onclick = () => {
+  ctx(); buzz(20); gateBtn.disabled = true;
+  gate.classList.add('out'); intro.classList.add('go'); setTimeout(() => gate.remove(), 1200);
+  auto = setTimeout(abrirInvitacion, reduceMotion ? 500 : 2800);
+};
+$('#seal').onclick = () => { clearTimeout(auto); abrirInvitacion(); };   // tocar el sello adelanta la apertura
+gateBtn.focus({ preventScroll: true });

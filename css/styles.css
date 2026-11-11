@@ -213,10 +213,10 @@ body.intro-on .enter{animation-play-state:paused}
   background:repeating-conic-gradient(from 0deg,rgba(240,194,75,.14) 0 3deg,transparent 3deg 9deg);
   -webkit-mask:radial-gradient(circle,#000,transparent 52%);mask:radial-gradient(circle,#000,transparent 52%);animation:spin 120s linear infinite}
 .intro>:not(.intro-sun){position:relative;animation:enter .9s var(--ease) both}
-.intro-top{animation-delay:.1s!important}.intro-name{animation-delay:.25s!important}.env{animation-delay:.45s!important}.intro .btn{animation-delay:.9s!important}
+.intro-top{animation-delay:.2s!important}.intro-name{animation-delay:.4s!important}.env{animation-delay:.7s!important}
+.intro:not(.go)>:not(.intro-sun){animation-play-state:paused}
 .intro-name{font-size:clamp(2.2rem,11vw,3.6rem);background:linear-gradient(180deg,#fff0b8,var(--gold) 50%,var(--gold-d));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 16px rgba(240,194,75,.35));transition:opacity .5s}
 .intro-top{transition:opacity .5s}
-.intro .btn{min-width:min(78vw,260px)}
 
 .env{width:var(--ew);aspect-ratio:4/3;perspective:1100px;margin-top:clamp(0px,3dvh,26px)}
 .env>*{position:absolute}
@@ -240,7 +240,6 @@ body.intro-on .enter{animation-play-state:paused}
 
 /* abrir: la solapa se levanta, Kitty salta, la carta sube */
 .intro.open .intro-top,.intro.open .intro-name{opacity:0}
-.intro.open .btn{opacity:0;transition:opacity .3s;pointer-events:none}
 .intro.open .seal{animation:pop .55s var(--ease) forwards;pointer-events:none}
 .intro.open .flap{animation:flap .9s var(--ease) .2s forwards}
 .intro.open .letter{transform:translateY(-62%)}
@@ -252,3 +251,14 @@ body.intro-on .enter{animation-play-state:paused}
 @keyframes leave{to{opacity:0;transform:scale(1.4)}}
 @media(max-height:560px){.intro-top{display:none}}
 @media(prefers-reduced-motion:reduce){.intro.open .letter{transition:none}.intro.leave{animation:none;opacity:0}}
+
+/* ============ Pantalla negra de inicio ============ */
+.gate{position:fixed;inset:0;z-index:110;background:#000;display:grid;place-items:center;padding:20px;transition:opacity .9s ease,visibility .9s}
+.gate.out{opacity:0;visibility:hidden;pointer-events:none}
+.gate-btn{min-height:54px;padding:0 36px;border:1px solid rgba(255,255,255,.55);border-radius:999px;background:transparent;color:#fff;font:400 .95rem Outfit,sans-serif;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;touch-action:manipulation;
+  animation:gate-in 1.4s ease .4s both,breathe 3.2s ease-in-out 1.8s infinite;transition:background .2s,border-color .2s,transform .2s}
+.gate-btn:hover{background:rgba(255,255,255,.1);border-color:#fff}
+.gate-btn:active{transform:scale(.97)}
+.gate-btn:focus-visible{outline:2px solid #fff;outline-offset:5px}
+@keyframes gate-in{from{opacity:0;transform:translateY(8px)}}
+@keyframes breathe{50%{box-shadow:0 0 28px rgba(255,255,255,.22)}}
