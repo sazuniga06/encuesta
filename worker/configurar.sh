@@ -24,13 +24,10 @@ CHAT=$(api getUpdates 2>/dev/null | json "j.result.filter(u=>u.message).pop().me
 
 echo "━━ 3/4  Cloudflare (cuenta gratis): se abrirá el navegador para iniciar sesión"
 npx --yes wrangler login
-for i in 1 2 3; do
-  OUT=$(npx --yes wrangler deploy 2>&1 | tee /dev/stderr) && break
-  echo
-  echo "   Cloudflare pide registrar tu subdominio gratis (workers.dev). Abre el enlace 'onboarding' del error,"
-  echo "   elige un nombre cualquiera (ej. tu usuario) y acepta."
-  read -rp "   Cuando lo hayas hecho, pulsa Enter para reintentar… "
-done
+echo "   Si Cloudflare pregunta «Would you like to register a workers.dev subdomain now?», responde y (sí)"
+echo "   y escribe un nombre cualquiera (ej. tu usuario). Es gratis y se hace una sola vez."
+npx --yes wrangler deploy || { echo "   El deploy falló; revisa el mensaje de arriba."; exit 1; }
+OUT=$(npx --yes wrangler deploy 2>&1 | tee /dev/stderr)   # segundo deploy (rápido) solo para leer la URL
 URL=$(echo "${OUT:-}" | grep -o 'https://[^ ]*workers.dev' | head -1 || true)
 [ -n "$URL" ] || { echo "   No pude leer la URL del Worker."; exit 1; }
 printf %s "$TOKEN" | npx --yes wrangler secret put TOKEN
