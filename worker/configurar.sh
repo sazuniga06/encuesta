@@ -24,7 +24,14 @@ CHAT=$(api getUpdates 2>/dev/null | json "j.result.filter(u=>u.message).pop().me
 
 echo "━━ 3/4  Cloudflare (cuenta gratis): se abrirá el navegador para iniciar sesión"
 npx --yes wrangler login
-URL=$(npx --yes wrangler deploy 2>&1 | tee /dev/stderr | grep -o 'https://[^ ]*workers.dev' | head -1)
+for i in 1 2 3; do
+  OUT=$(npx --yes wrangler deploy 2>&1 | tee /dev/stderr) && break
+  echo
+  echo "   Cloudflare pide registrar tu subdominio gratis (workers.dev). Abre el enlace 'onboarding' del error,"
+  echo "   elige un nombre cualquiera (ej. tu usuario) y acepta."
+  read -rp "   Cuando lo hayas hecho, pulsa Enter para reintentar… "
+done
+URL=$(echo "${OUT:-}" | grep -o 'https://[^ ]*workers.dev' | head -1 || true)
 [ -n "$URL" ] || { echo "   No pude leer la URL del Worker."; exit 1; }
 printf %s "$TOKEN" | npx --yes wrangler secret put TOKEN
 printf %s "$CHAT" | npx --yes wrangler secret put CHAT_ID
