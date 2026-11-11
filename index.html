@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Amanecer en la cosecha · Invitación</title>
+<meta name="description" content="Una invitación especial para ver Amanecer en la cosecha, con Hello Kitty y sus amigos.">
+<meta name="theme-color" content="#14081f">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta property="og:title" content="Amanecer en la cosecha · Invitación">
+<meta property="og:description" content="Hello Kitty te invita a la cosecha. ¿Te ofreces como tributo?">
+<meta property="og:image" content="assets/poster.jpg">
+<link rel="icon" href="assets/kitty.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Limelight&family=Outfit:wght@300;400;500;600&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/corre.webp" type="image/webp">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<header class="appbar glass">
+  <span class="ms gold" aria-hidden="true">movie</span>
+  <b>Amanecer en la cosecha</b>
+  <span class="chip"><span class="ms">event</span>22 nov</span>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="sun" aria-hidden="true"></div>
+    <div class="hero-text enter">
+      <span class="chip"><span class="ms">mail</span>Invitación especial</span>
+      <h1>Amanecer<br>en la cosecha</h1>
+      <p class="sub">Los Juegos del Hambre</p>
+      <p class="eyebrow" id="para">Para ti</p>
+      <p class="lead">Hello Kitty y toda la pandilla ya se alistaron para la cosecha. Falta un tributo en la expedición… ¿te vienes conmigo al cine?</p>
+      <div class="actions">
+        <a class="btn filled big" href="#rsvp"><span class="ms">favorite</span>Responder</a>
+        <a class="btn text" href="#detalles">Ver detalles<span class="ms">expand_more</span></a>
+      </div>
+    </div>
+    <div class="stage enter d2">
+      <img class="peek l" src="assets/melody.webp" alt="" width="420" height="596" decoding="async">
+      <div class="glass vid"><video id="hero-video" src="assets/kitty.mp4" poster="assets/poster.jpg" muted loop playsinline preload="metadata" aria-label="Hello Kitty caminando por el bosque"></video></div>
+      <img class="peek r" src="assets/kuromi.webp" alt="" width="420" height="596" decoding="async">
+    </div>
+  </section>
+
+  <!-- BOLETO -->
+  <section id="detalles">
+    <div class="ticket glass rv">
+      <div class="stub">
+        <img class="book" src="assets/libro.png" alt="Portada de Amanecer en la cosecha, de Suzanne Collins" width="336" height="522" loading="lazy" decoding="async">
+        <div>
+          <small>Boleto de la cosecha</small>
+          <h3>Admit One</h3>
+          <span class="eyebrow" id="tributo">Tributo</span>
+        </div>
+      </div>
+      <div class="info">
+        <div><span class="ms">calendar_month</span><span><small>Fecha</small><strong>Domingo 22 de noviembre</strong></span></div>
+        <div><span class="ms">schedule</span><span><small>Hora</small><strong id="hora">Te la confirmo pronto</strong></span></div>
+        <div><span class="ms">theaters</span><span><small>Cine</small><strong id="cine">Te lo confirmo pronto</strong></span></div>
+        <div><span class="ms">hiking</span><span><small>Vestimenta</small><strong>Modo explorador</strong></span></div>
+      </div>
+    </div>
+
+    <figure class="glass mision rv">
+      <img src="assets/grupo.jpg" alt="Hello Kitty y sus amigos de Sanrio en el bosque, con un mapa" width="1600" height="893" loading="lazy" decoding="async">
+      <figcaption class="glass"><b>Misión:</b> cruzar el bosque, esquivar a los Profesionales y llegar a la sala antes de que empiece la película. Palomitas incluidas.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ALIADOS -->
+  <section class="crew">
+    <div class="head rv">
+      <div><p class="eyebrow">Distrito Sanrio</p><h2>Tu equipo de expedición</h2></div>
+      <div class="arrows">
+        <button class="btn icon" data-s="-1" aria-label="Anterior"><span class="ms">chevron_left</span></button>
+        <button class="btn icon" data-s="1" aria-label="Siguiente"><span class="ms">chevron_right</span></button>
+      </div>
+    </div>
+    <div class="track" id="track" tabindex="0" aria-label="Personajes de la expedición"></div>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+  </section>
+
+  <!-- RSVP -->
+  <section id="rsvp">
+    <div class="glass rsvp rv">
+      <span class="ms deco" style="left:5%;top:6%" aria-hidden="true">spa</span>
+      <span class="ms deco" style="right:5%;bottom:5%" aria-hidden="true">spa</span>
+      <p class="eyebrow">La cosecha ha comenzado</p>
+      <h2>¿Te ofreces como tributo?</h2>
+      <p class="lead">Tu respuesta me llega directo al celular. Elige con cuidado… la suerte nunca está de más.</p>
+      <div class="btns" id="btns">
+        <button class="btn filled big" id="bYes"><span class="ms">celebration</span>¡Sí, me ofrezco!</button>
+        <button class="btn tonal" id="bNo"><span class="ms">heart_broken</span>Hoy no puedo</button>
+      </div>
+      <p class="note">Y que la suerte esté siempre de tu lado ✨</p>
+    </div>
+  </section>
+</main>
+
+<footer>Hecho con cariño · Hello Kitty &amp; Los Juegos del Hambre</footer>
+
+<a class="btn filled fab" id="fab" href="#rsvp"><span class="ms">favorite</span>Responder</a>
+
+<!-- SÍ -->
+<div class="ov" id="yes" role="dialog" aria-modal="true" aria-labelledby="yt" hidden>
+  <div class="panel glass">
+    <p class="eyebrow">Cosecha completada</p>
+    <h2 id="yt">¡Me ofrezco como tributo!</h2>
+    <img class="pic float" src="assets/poses.webp" alt="Hello Kitty en distintas poses de expedición" width="900" height="560">
+    <p class="lead">Nos vemos el <b>domingo 22 de noviembre</b>. Prepara las palomitas, yo llevo el mapa.</p>
+    <div class="parade" id="parade" aria-hidden="true"></div>
+    <div class="status" data-st></div>
+    <div class="row">
+      <a class="btn tonal" id="ics" download="amanecer-en-la-cosecha.ics"><span class="ms">event_available</span>Agendar</a>
+      <button class="btn filled" data-close>Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- NO -->
+<div class="ov" id="no" role="dialog" aria-modal="true" aria-labelledby="nt" hidden>
+  <div class="panel glass">
+    <p class="eyebrow">Un cañón suena a lo lejos…</p>
+    <h2 id="nt">Un tributo menos</h2>
+    <div class="runway" role="img" aria-label="Hello Kitty corriendo con una gota de sudor">
+      <div class="runner">
+        <div class="rfig"><div class="sprite"><img src="assets/corre.webp" alt="" width="2400" height="328"></div><i class="shade"></i></div>
+      </div>
+      <i class="ground"></i>
+    </div>
+    <p class="lead">Hello Kitty sale corriendo con el corazón roto. Gracias por avisar, será para la próxima cosecha.</p>
+    <div class="status" data-st></div>
+    <button class="btn tonal" data-close>Cambié de opinión</button>
+  </div>
+</div>
+<div class="flash" id="flash" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
