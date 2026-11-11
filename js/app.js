@@ -45,16 +45,47 @@ new IntersectionObserver(([e]) => $('#fab').classList.toggle('hide', e.isInterse
 const vid = $('#hero-video');
 new IntersectionObserver(([e]) => e.isIntersecting ? vid.play().catch(() => {}) : vid.pause(), { threshold: .25 }).observe(vid);
 
-/* ---------- Sonido sintético: fanfarria (sí) / cañón (no) ---------- */
-let ac;
+/* ---------- Audio (WebAudio: también funciona en iPhone): música épica, silbido del sinsajo y efectos ---------- */
+let ac, master, musicaOn = false, silenciado = false, objetivo = .38;
+try { silenciado = localStorage.getItem('muted') === '1'; } catch {}
+const ctx = () => { if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume(); return ac; };
+const bytes = {}, listos = {};
+const pre = url => bytes[url] || (bytes[url] = fetch(url).then(r => r.arrayBuffer()));
+const cargar = url => listos[url] || (listos[url] = pre(url).then(b => new Promise((ok, err) => ctx().decodeAudioData(b.slice(0), ok, err))));
+pre('assets/sinsajo.mp3'); pre('assets/epica.mp3');
+
+function volumen(v, seg = .6) {
+  objetivo = v; if (!master) return;
+  const g = master.gain, t = ac.currentTime;
+  g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(silenciado ? 0 : v, t + seg);
+}
+async function musica() {
+  if (musicaOn) return; musicaOn = true;
+  try {
+    const c = ctx(), buf = await cargar('assets/epica.mp3');
+    master = c.createGain(); master.gain.value = 0; master.connect(c.destination);
+    const s = c.createBufferSource(); s.buffer = buf; s.loop = true; s.connect(master); s.start();
+    volumen(.38, 3);
+  } catch { musicaOn = false; }
+}
+async function sinsajo(delay = 0) {
+  if (silenciado) return;
+  try {
+    const c = ctx(), buf = await cargar('assets/sinsajo.mp3'), s = c.createBufferSource(), g = c.createGain();
+    s.buffer = buf; g.gain.value = .9; s.connect(g).connect(c.destination); s.start(c.currentTime + delay);
+  } catch {}
+}
 function tone(f, t, d, type = 'triangle', g = .25, f2) {
-  ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-  if (ac.state === 'suspended') ac.resume();
-  const o = ac.createOscillator(), v = ac.createGain(), s = ac.currentTime + t;
+  if (silenciado) return;
+  const c = ctx(), o = c.createOscillator(), v = c.createGain(), s = c.currentTime + t;
   o.type = type; o.frequency.setValueAtTime(f, s); if (f2) o.frequency.exponentialRampToValueAtTime(f2, s + d);
   v.gain.setValueAtTime(g, s); v.gain.exponentialRampToValueAtTime(.001, s + d);
-  o.connect(v).connect(ac.destination); o.start(s); o.stop(s + d);
+  o.connect(v).connect(c.destination); o.start(s); o.stop(s + d);
 }
+const bMute = $('#mute');
+const pintaMute = () => { $('.ms', bMute).textContent = silenciado ? 'music_off' : 'music_note'; bMute.setAttribute('aria-pressed', silenciado); bMute.setAttribute('aria-label', silenciado ? 'Activar música' : 'Silenciar música'); };
+bMute.onclick = () => { silenciado = !silenciado; try { localStorage.setItem('muted', silenciado ? '1' : '0'); } catch {} pintaMute(); volumen(objetivo, .3); };
+pintaMute();
 
 /* ---------- Confeti: moños, tiras doradas y puntos rosa ---------- */
 function confetti() {
@@ -103,7 +134,7 @@ const bYes = $('#bYes'), bNo = $('#bNo');
 let lastFocus;
 function abrir(ov) { lastFocus = document.activeElement; ov.hidden = false; requestAnimationFrame(() => ov.classList.add('on')); document.body.style.overflow = 'hidden'; $('[data-close]', ov).focus({ preventScroll: true }); }
 function cerrar() {
-  $$('.ov.on').forEach(o => o.classList.remove('on')); document.body.style.overflow = '';
+  $$('.ov.on').forEach(o => o.classList.remove('on')); document.body.style.overflow = ''; volumen(.38, 1);
   bYes.disabled = bNo.disabled = false; lastFocus && lastFocus.focus({ preventScroll: true });
 }
 $$('[data-close]').forEach(b => b.onclick = cerrar);
@@ -126,9 +157,9 @@ async function responder(si) {
   abrir(ov); st.innerHTML = SENDING;
   if (si) {
     agenda(); buzz([40, 60, 40, 60, 140]); confetti(); setTimeout(confetti, 900);
-    [523, 659, 784, 1047].forEach((f, i) => tone(f, i * .16, .5));
+    [523, 659, 784, 1047].forEach((f, i) => tone(f, i * .16, .5)); sinsajo(.9);
   } else {
-    buzz(250); $('#flash').classList.add('go'); $('.panel', ov).classList.add('shake');
+    buzz(250); volumen(.1, .5); $('#flash').classList.add('go'); $('.panel', ov).classList.add('shake');
     tone(140, 0, 1.2, 'sine', .6, 28); setTimeout(() => $('#flash').classList.remove('go'), 1000);
     if (!$('.drop', ov)) for (let i = 0; i < (innerWidth < 640 ? 30 : 50); i++) {
       const d = document.createElement('i'); d.className = 'drop';
@@ -145,3 +176,18 @@ async function responder(si) {
 }
 bYes.onclick = () => responder(true);
 bNo.onclick = () => responder(false);
+
+/* ---------- Portada: el sobre con la cara de Kitty ---------- */
+const intro = $('#intro'), abrirBtn = $('#openBtn');
+$('#intro-name').textContent = nombre || 'ti';
+function abrirInvitacion() {
+  if (intro.classList.contains('open')) return;
+  ctx();                                   // el toque del usuario desbloquea el audio (iPhone/Chrome)
+  intro.classList.add('open'); buzz(30); sinsajo(.15);
+  const k = reduceMotion ? .1 : 1;
+  setTimeout(() => { musica(); tone(784, 0, .5); tone(1047, .12, .6); confetti(); }, 900 * k);
+  setTimeout(() => intro.classList.add('leave'), 2700 * k);
+  setTimeout(() => { intro.remove(); document.body.classList.remove('intro-on'); scrollTo(0, 0); }, 3600 * k);
+}
+abrirBtn.onclick = $('#seal').onclick = abrirInvitacion;
+abrirBtn.focus({ preventScroll: true });

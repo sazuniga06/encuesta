@@ -16,16 +16,40 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Outfit:wght@300;400;500;600&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/kitty-cara.webp" type="image/webp">
 <link rel="preload" as="image" href="assets/corre.webp" type="image/webp">
 <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body class="intro-on">
 <div class="bg" aria-hidden="true"></div>
+
+<!-- PORTADA: sobre con la cara de Kitty -->
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Invitación">
+  <div class="intro-sun" aria-hidden="true"></div>
+  <p class="eyebrow intro-top">Una invitación para</p>
+  <h2 class="intro-name" id="intro-name">ti</h2>
+  <div class="env" id="env">
+    <div class="env-back"></div>
+    <div class="letter">
+      <p class="eyebrow">Los Juegos del Hambre</p>
+      <h3>Amanecer<br>en la cosecha</h3>
+      <i class="rule"></i>
+      <p class="when">Domingo 22 de noviembre</p>
+    </div>
+    <div class="env-front"></div>
+    <svg class="env-lines" viewBox="0 0 100 75" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0 L50 39 L100 0 M0 75 L38 36 M100 75 L62 36" fill="none" stroke="#f0c24b" stroke-opacity=".55" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>
+    <div class="flap"></div>
+    <button class="seal" id="seal" aria-label="Abrir invitación"><img src="assets/kitty-cara.webp" alt="" width="520" height="353"><span class="tag">Abrir</span></button>
+  </div>
+  <button class="btn filled big" id="openBtn"><span class="ms">drafts</span>Abrir</button>
+</div>
+<noscript><style>.intro{display:none!important}body.intro-on{overflow:auto!important}</style></noscript>
 
 <header class="appbar glass">
   <span class="ms gold" aria-hidden="true">movie</span>
   <b>Amanecer en la cosecha</b>
   <span class="chip"><span class="ms">event</span>22 nov</span>
+  <button class="btn icon" id="mute" aria-label="Silenciar música" aria-pressed="false"><span class="ms">music_note</span></button>
 </header>
 
 <main>
@@ -34,8 +58,8 @@
     <div class="sun" aria-hidden="true"></div>
     <div class="hero-text enter">
       <span class="chip"><span class="ms">mail</span>Invitación especial</span>
-      <h1>Amanecer<br>en la cosecha</h1>
       <p class="sub">Los Juegos del Hambre</p>
+      <h1>Amanecer<br>en la cosecha</h1>
       <p class="eyebrow" id="para">Para ti</p>
       <p class="lead">Hello Kitty y toda la pandilla ya se alistaron para la cosecha. Falta un tributo en la expedición… ¿te vienes conmigo al cine?</p>
       <div class="actions">
