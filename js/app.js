@@ -5,7 +5,7 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const buzz = p => navigator.vibrate && navigator.vibrate(p);
 
 /* ---------- Personalización ( ?para=Nombre ) ---------- */
-const nombre = (new URLSearchParams(location.search).get('para') || '').trim().slice(0, 40);
+const nombre = (new URLSearchParams(location.search).get('para') || CONFIG.nombre || '').trim().slice(0, 40);
 if (nombre) { $('#para').textContent = 'Para ' + nombre; $('#tributo').textContent = 'Tributo: ' + nombre; }
 if (CONFIG.hora) $('#hora').textContent = CONFIG.hora;
 if (CONFIG.cine) $('#cine').textContent = CONFIG.cine;
@@ -79,14 +79,22 @@ function confetti() {
   })();
 }
 
-/* ---------- Envío al celular (push con ntfy.sh) ---------- */
-async function enviar(si) {
+/* ---------- Envío al celular: WhatsApp (vía Worker) y, si falla o no está configurado, ntfy.sh ---------- */
+async function viaWhatsApp(si) {
+  if (!CONFIG.endpoint) return false;
+  try {
+    const r = await fetch(CONFIG.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ respuesta: si ? 'si' : 'no', nombre }) });
+    return r.ok;
+  } catch { return false; }
+}
+async function viaNtfy(si) {
   const quien = nombre || 'Tu invitad@';
   const body = { topic: CONFIG.topic, priority: 4, tags: si ? ['tada', 'kissing_heart'] : ['broken_heart'],
     title: si ? '¡DIJO QUE SÍ! 🎬' : 'Dijo que no 💔',
     message: `${quien} respondió ${si ? 'SÍ' : 'NO'} a Amanecer en la cosecha (22 nov). ${new Date().toLocaleString('es-CO')}` };
   try { return (await fetch('https://ntfy.sh/', { method: 'POST', body: JSON.stringify(body) })).ok; } catch { return false; }
 }
+const enviar = async si => (await viaWhatsApp(si)) || viaNtfy(si);
 const OK = '';
 const SENDING = '<span class="chip"><span class="ms">sync</span>Enviando respuesta…</span>';
 
